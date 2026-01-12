@@ -25,4 +25,14 @@ public class CategoryService {
         }
         return repository.save(category);
     }
+
+    //Deletar uma categoria
+    public boolean delete(Long id){
+        if(repository.existsById(id)){
+            repository.deleteById(id);
+            return true;
+        }
+
+        return false;
+    }
 }
