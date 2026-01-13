@@ -1,7 +1,10 @@
 package com.titan.commerce.modules.catalog.controller;
 
 import com.titan.commerce.modules.catalog.domain.Category;
+import com.titan.commerce.modules.catalog.dto.category.CategoryRequestDTO;
+import com.titan.commerce.modules.catalog.dto.category.CategoryResponseDTO;
 import com.titan.commerce.modules.catalog.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +21,14 @@ public class CategoryController {
     private final CategoryService service;
 
     @GetMapping
-    public ResponseEntity<List<Category>> listar(){
+    public ResponseEntity<List<CategoryResponseDTO>> listar(){
         return ResponseEntity.ok(service.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Category> criar(@RequestBody Category category){
-        Category newCategory = service.create(category);
-        return ResponseEntity.status(201).body(newCategory);
+    public ResponseEntity<CategoryResponseDTO> criar(@RequestBody @Valid CategoryRequestDTO categoryDTO){
+        CategoryResponseDTO newCategoryResponseDto = service.create(categoryDTO);
+        return ResponseEntity.status(201).body(newCategoryResponseDto);
     }
 
     @DeleteMapping("/{id}")
@@ -35,5 +38,21 @@ public class CategoryController {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Categoria não foi encontrada");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id){
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    @GetMapping("/{id}/subcategories")
+    public ResponseEntity<List<CategoryResponseDTO>> findByParentId(@PathVariable Long id){
+        return ResponseEntity.ok(service.findByChildrens(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponseDTO> update(@PathVariable @Valid Long id, @RequestBody CategoryRequestDTO requestDTO){
+        CategoryResponseDTO categoriaUpdated = service.update(id, requestDTO);
+        return ResponseEntity.ok(categoriaUpdated);
     }
 }
