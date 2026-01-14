@@ -17,5 +17,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long>{
     boolean existsBySlug(String slug);
 
     List<Category> findByParentId(Long id);
+
+    List<Category> findByActiveTrue();
+
+    List<Category> findByActiveFalse();
 }
 

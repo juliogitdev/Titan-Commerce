@@ -21,8 +21,14 @@ public class CategoryService {
 
     //retorna todas as categoria do banco
     @Transactional(readOnly = true)
-    public List<CategoryResponseDTO> findAll(){
-        List<Category> categories = repository.findAll();
+    public List<CategoryResponseDTO> findAll(Boolean active){
+        List<Category> categories;
+
+        if(active == null || active){
+            categories = repository.findByActiveTrue();
+        }else{
+            categories = repository.findByActiveFalse();
+        }
 
         return categories.stream()
                 .map(CategoryResponseDTO::new) // Chama o construtor do DTO para CADA item
@@ -59,7 +65,9 @@ public class CategoryService {
     //Deletar uma categoria
     public boolean delete(Long id){
         if(repository.existsById(id)){
-            repository.deleteById(id);
+            Category category = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+            category.setActive(false);
+            repository.save(category);
             return true;
         }
 

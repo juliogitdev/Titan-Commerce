@@ -21,8 +21,8 @@ public class CategoryController {
     private final CategoryService service;
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponseDTO>> listar(){
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<CategoryResponseDTO>> listar(@RequestParam(required = false) Boolean active){
+        return ResponseEntity.ok(service.findAll(active));
     }
 
     @PostMapping
