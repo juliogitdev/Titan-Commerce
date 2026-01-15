@@ -72,4 +72,18 @@ public class ProductService {
         return new ProductResponseDTO(product);
     }
 
+    @Transactional
+    public Boolean delete(Long id){
+        if(repository.existsById(id)){
+            Product product = repository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+            product.setActive(false);
+            repository.save(product);
+            return true;
+        }
+
+        return false;
+    }
+
 }

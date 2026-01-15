@@ -35,4 +35,13 @@ public class ProductController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        if (service.delete(id)){
+            return ResponseEntity.ok("Produto apagado(desativado) com sucesso");
+
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado");
+    }
+
 }
