@@ -103,4 +103,42 @@ public class ProductService {
 
     }
 
+    @Transactional
+    public ProductResponseDTO update(Long id, ProductRequestDTO dtoRequest){
+        Product product = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        if (dtoRequest.getTitle() != null && !dtoRequest.getTitle().equals(product.getTitle())) {
+            if (repository.existsByTitle(dtoRequest.getTitle())) {
+                throw new IllegalArgumentException("Já existe um produto com esse nome");
+            }
+            product.setTitle(dtoRequest.getTitle());
+        }
+
+        if (dtoRequest.getDescription() != null){
+            product.setDescription(dtoRequest.getDescription());
+        }
+        if (dtoRequest.getBrand() != null) {
+            product.setBrand(dtoRequest.getBrand());
+        }
+        if (dtoRequest.getActive() != null){
+            product.setActive(dtoRequest.getActive());
+        }
+
+        if (dtoRequest.getCategoryId() != null){
+            Category category = categoryRepository.findById(dtoRequest.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+
+            if (!Boolean.TRUE.equals(category.getActive())) {
+                throw new IllegalArgumentException("Categoria desativada");
+            }
+
+            product.setCategory(category);
+        }
+
+        Product productUpdated = repository.save(product);
+
+        return new ProductResponseDTO(productUpdated);
+
+    }
+
 }
