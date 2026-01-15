@@ -86,4 +86,21 @@ public class ProductService {
         return false;
     }
 
+    @Transactional
+    public ProductResponseDTO activate  (Long id){
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("falha ao buscar produto"));
+
+        if(Boolean.TRUE.equals(product.getActive())){
+            throw new IllegalArgumentException("Este produto já está ativado");
+        }
+
+        product.setActive(true);
+
+        return new ProductResponseDTO(repository.save(product));
+
+
+
+    }
+
 }

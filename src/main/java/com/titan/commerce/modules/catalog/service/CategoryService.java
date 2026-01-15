@@ -128,4 +128,20 @@ public class CategoryService {
 
 
     }
+
+    @Transactional
+    public CategoryResponseDTO activate(Long id){
+        Category category = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Falha ao encontrar categoria"));
+
+        if(Boolean.TRUE.equals(category.getActive())){
+            throw new IllegalArgumentException("Categoria já está ativada");
+        }
+
+        category.setActive(true);
+
+        return new CategoryResponseDTO(category);
+
+    }
+
 }

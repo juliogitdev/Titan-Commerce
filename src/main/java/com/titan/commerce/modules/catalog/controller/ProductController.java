@@ -44,4 +44,10 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado");
     }
 
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long id) {
+        service.activate(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

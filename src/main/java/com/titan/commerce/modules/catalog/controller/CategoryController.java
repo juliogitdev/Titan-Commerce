@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 
@@ -54,5 +55,13 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDTO> update(@PathVariable @Valid Long id, @RequestBody CategoryRequestDTO requestDTO){
         CategoryResponseDTO categoriaUpdated = service.update(id, requestDTO);
         return ResponseEntity.ok(categoriaUpdated);
+    }
+
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long id){
+        service.activate(id);
+
+        return ResponseEntity.noContent().build();
+
     }
 }
