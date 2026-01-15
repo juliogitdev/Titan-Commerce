@@ -1,0 +1,75 @@
+package com.titan.commerce.modules.catalog.service;
+
+import com.titan.commerce.modules.catalog.domain.Category;
+import com.titan.commerce.modules.catalog.domain.Product;
+import com.titan.commerce.modules.catalog.dto.product.ProductRequestDTO;
+import com.titan.commerce.modules.catalog.dto.product.ProductResponseDTO;
+import com.titan.commerce.modules.catalog.repository.CategoryRepository;
+import com.titan.commerce.modules.catalog.repository.ProductRepository;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class ProductService {
+
+    private final ProductRepository repository;
+    private final CategoryRepository categoryRepository;
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDTO> findAll(Boolean active){
+        List<Product> products;
+
+        if(active == null || active){
+            products = repository.findByActiveTrue();
+        }else{
+            products = repository.findByActiveFalse();
+        }
+
+        return products
+                .stream()
+                .map(ProductResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ProductResponseDTO create(ProductRequestDTO productRequestDTO){
+
+        //verifica se já foi cadastrado aquele titulo antes
+        if(repository.existsByTitle(productRequestDTO.getTitle())){
+            throw new IllegalArgumentException("já existe um produto com esse nome");
+        }
+
+        Product newProduct = productRequestDTO.toEntity();
+
+        if (productRequestDTO.getCategoryId() != null) {
+            Category category = categoryRepository.findById(productRequestDTO.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+
+            if (!Boolean.TRUE.equals(category.getActive())) { // Null-safe check
+                throw new IllegalArgumentException("Categoria desativada");
+            }
+
+            newProduct.setCategory(category);
+        }
+
+        repository.save(newProduct);
+        return new ProductResponseDTO(newProduct);
+
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponseDTO findById(Long id){
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        return new ProductResponseDTO(product);
+    }
+
+}

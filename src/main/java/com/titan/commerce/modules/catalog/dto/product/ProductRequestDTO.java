@@ -11,14 +11,14 @@ public class ProductRequestDTO {
     @NotBlank private String title;
     private String description;
     private String brand;
-    private Long idCategory;
+    private Long categoryId;
     private Boolean active;
 
-    public ProductRequestDTO(String title, String description, String brand, Long idCategory, Boolean active){
+    public ProductRequestDTO(String title, String description, String brand, Long categoryId, Boolean active){
         this.title = title;
         this.description = description;
         this.brand = brand;
-        this.idCategory = idCategory;
+        this.categoryId = categoryId;
         this.active = active;
     }
 

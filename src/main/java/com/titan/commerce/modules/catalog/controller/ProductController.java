@@ -1,0 +1,38 @@
+package com.titan.commerce.modules.catalog.controller;
+
+import com.titan.commerce.modules.catalog.dto.product.ProductRequestDTO;
+import com.titan.commerce.modules.catalog.dto.product.ProductResponseDTO;
+import com.titan.commerce.modules.catalog.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/products")
+public class ProductController {
+
+    private final ProductService service;
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponseDTO>> listar(@RequestParam(required = false) Boolean active){
+        return ResponseEntity.ok(service.findAll(active));
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductResponseDTO> create(@RequestBody ProductRequestDTO request){
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(service.create(request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDTO> findById(@PathVariable Long id){
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+}

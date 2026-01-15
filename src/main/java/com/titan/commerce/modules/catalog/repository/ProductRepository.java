@@ -12,4 +12,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     //pesquisa por categoria - id
     List<Product> findByCategoryId(Long categoryId);
 
+    //Pesquisa por produtos ativos
+    List<Product> findByActiveTrue();
+
+    //Pesquisa por produtos inativos
+    List<Product> findByActiveFalse();
+
+    //pesquisa se aquele titulo já existe
+    Boolean existsByTitle(String title);
+
 }
