@@ -133,20 +133,28 @@ public class ProductVariantService {
     }
 
     @Transactional
-    public void delete(Long id) {
-        ProductVariant variant = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Variante não encontrada"));
+    public Boolean delete(Long id) {
+        if (repository.existsById(id)) {
+            ProductVariant variant = repository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Variante não encontrada"));
 
-        variant.setActive(false);
-        repository.save(variant);
+            variant.setActive(false);
+            repository.save(variant);
+            return true;
+        }
+        return false;
     }
 
     @Transactional
-    public void activate(Long id) {
+    public ProductVariantResponseDTO activate(Long id) {
         ProductVariant variant = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Variante não encontrada"));
 
+        if (Boolean.TRUE.equals(variant.getActive())){
+            throw new IllegalArgumentException("Esta variante já está ativada");
+        }
+
         variant.setActive(true);
-        repository.save(variant);
+        return new ProductVariantResponseDTO(repository.save(variant));
     }
 }

@@ -2,7 +2,9 @@ package com.titan.commerce.modules.catalog.controller;
 
 import com.titan.commerce.modules.catalog.dto.product.ProductRequestDTO;
 import com.titan.commerce.modules.catalog.dto.product.ProductResponseDTO;
+import com.titan.commerce.modules.catalog.dto.productVariant.ProductVariantResponseDTO;
 import com.titan.commerce.modules.catalog.service.ProductService;
+import com.titan.commerce.modules.catalog.service.ProductVariantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService service;
+    private final ProductVariantService productVariantService;
 
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> listar(@RequestParam(required = false) Boolean active){
@@ -54,6 +57,11 @@ public class ProductController {
     public ResponseEntity<ProductResponseDTO> update(@PathVariable Long id, @RequestBody ProductRequestDTO requestDTO) {
         ProductResponseDTO productUpdated = service.update(id, requestDTO);
         return ResponseEntity.ok(productUpdated);
+    }
+
+    @GetMapping("/{id}/variants")
+    public ResponseEntity<List<ProductVariantResponseDTO>> findByProductId(@PathVariable Long id) {
+        return ResponseEntity.ok(productVariantService.findByProductId(id));
     }
 
 
