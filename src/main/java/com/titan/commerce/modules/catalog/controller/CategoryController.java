@@ -3,7 +3,9 @@ package com.titan.commerce.modules.catalog.controller;
 import com.titan.commerce.modules.catalog.domain.Category;
 import com.titan.commerce.modules.catalog.dto.category.CategoryRequestDTO;
 import com.titan.commerce.modules.catalog.dto.category.CategoryResponseDTO;
+import com.titan.commerce.modules.catalog.dto.product.ProductResponseDTO;
 import com.titan.commerce.modules.catalog.service.CategoryService;
+import com.titan.commerce.modules.catalog.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService service;
+    private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> listar(@RequestParam(required = false) Boolean active){
@@ -63,5 +66,10 @@ public class CategoryController {
 
         return ResponseEntity.noContent().build();
 
+    }
+
+    @GetMapping("/{id}/products")
+    public ResponseEntity<List<ProductResponseDTO>> findByCategoryId(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.findByCategory(id));
     }
 }

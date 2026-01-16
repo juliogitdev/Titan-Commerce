@@ -141,4 +141,15 @@ public class ProductService {
 
     }
 
+    public List<ProductResponseDTO> findByCategory(Long categoryId){
+        if (!categoryRepository.existsById(categoryId)){
+            throw new IllegalArgumentException("Categoria não encontrada");
+        }
+        List<Product> products = repository.findByCategoryId(categoryId);
+
+        return products.stream()
+                .map(ProductResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }
