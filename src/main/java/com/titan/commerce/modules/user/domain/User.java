@@ -1,10 +1,7 @@
 package com.titan.commerce.modules.user.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,6 +32,8 @@ public class User implements UserDetails {
     private boolean active = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
