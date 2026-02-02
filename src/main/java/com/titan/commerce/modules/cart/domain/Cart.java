@@ -1,9 +1,12 @@
 package com.titan.commerce.modules.cart.domain;
 
 import com.titan.commerce.modules.cart.domain.enums.CartStatus;
+import com.titan.commerce.modules.core.domain.BaseAuditable;
 import com.titan.commerce.modules.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +14,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "carts")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Cart {
+@SuperBuilder
+public class Cart extends BaseAuditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
