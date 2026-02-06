@@ -2,6 +2,7 @@ package com.titan.commerce.modules.user.service;
 
 import com.titan.commerce.modules.user.domain.Role;
 import com.titan.commerce.modules.user.domain.User;
+import com.titan.commerce.modules.user.dto.PasswordUpdateDTO;
 import com.titan.commerce.modules.user.dto.RegisterDTO;
 import com.titan.commerce.modules.user.dto.UserResponseDTO;
 import com.titan.commerce.modules.user.dto.UserUpdateDTO;
@@ -111,6 +112,23 @@ public class UserService {
         user.setActive(true);
         repository.save(user);
         return new UserResponseDTO(user);
+    }
+
+    @Transactional
+    public void passwordUpdate(Long id, PasswordUpdateDTO dto){
+        User user = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())){
+            throw new IllegalArgumentException("Senha atual incorreta");
+        }
+
+        if (user.getPassword().equals(dto.getNewPassword())){
+            throw new IllegalArgumentException("A nova senha deve ser diferente da antiga");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        repository.save(user);
     }
 
 }

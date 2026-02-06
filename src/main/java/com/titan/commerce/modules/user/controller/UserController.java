@@ -1,6 +1,7 @@
 package com.titan.commerce.modules.user.controller;
 
 import com.titan.commerce.modules.catalog.dto.category.CategoryResponseDTO;
+import com.titan.commerce.modules.user.dto.PasswordUpdateDTO;
 import com.titan.commerce.modules.user.dto.UserResponseDTO;
 import com.titan.commerce.modules.user.dto.UserUpdateDTO;
 import com.titan.commerce.modules.user.service.UserService;
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("#id == authentication.principal.id")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
@@ -57,4 +58,10 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/password")
+    @PreAuthorize("#id == authentication.principal.id")
+    public ResponseEntity<String> passwordUpdate(@PathVariable Long id, @Valid @RequestBody PasswordUpdateDTO dto) {
+        service.passwordUpdate(id, dto);
+        return ResponseEntity.ok("Senha atualizada com sucesso");
+    }
 }
