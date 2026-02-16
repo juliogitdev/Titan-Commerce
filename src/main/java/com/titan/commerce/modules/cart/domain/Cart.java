@@ -34,6 +34,7 @@ public class Cart extends BaseAuditable{
 
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<CartItem> items = new ArrayList<>();
 
     @Column(name = "expires_at")

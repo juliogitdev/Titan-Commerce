@@ -5,7 +5,6 @@ CREATE TABLE carts (
 
     status VARCHAR(20) NOT NULL,
 
-    last_activity_at TIMESTAMP NOT NULL,
     expires_at TIMESTAMP NOT NULL,
 
     active BOOLEAN NOT NULL DEFAULT TRUE,

@@ -1,6 +1,7 @@
 package com.titan.commerce.modules.cart.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.titan.commerce.modules.catalog.domain.ProductVariant;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,8 +25,9 @@ public class CartItem {
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_variant_id") // Mapeia a mesma coluna do banco
+    private ProductVariant productVariant;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
