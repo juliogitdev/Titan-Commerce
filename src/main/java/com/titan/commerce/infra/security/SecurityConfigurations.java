@@ -33,6 +33,10 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/cart/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/cart/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

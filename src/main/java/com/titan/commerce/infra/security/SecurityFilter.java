@@ -1,5 +1,6 @@
 package com.titan.commerce.infra.security;
 
+import com.titan.commerce.modules.user.domain.User;
 import com.titan.commerce.modules.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,11 +28,12 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(token != null){
             var login = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByEmail(login);
+            User user = (User) userRepository.findByEmail(login);
 
             if(user != null){
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         }
         filterChain.doFilter(request, response);
