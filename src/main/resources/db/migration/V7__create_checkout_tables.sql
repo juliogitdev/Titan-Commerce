@@ -1,3 +1,6 @@
+--atualizamos a tabela de endereços que já existe
+ALTER TABLE addresses ADD COLUMN active BOOLEAN NOT NULL DEFAULT TRUE;
+
 -- 1. Tabela de Pedidos (Orders)
 CREATE TABLE orders (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
