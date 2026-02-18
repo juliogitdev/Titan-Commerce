@@ -177,4 +177,13 @@ public class CartService {
             cartRepository.save(anonymousCart);
         }
     }
+
+    public void setClosed(String cartId){
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Carrinho não encontrado"));
+
+        cart.setActive(false);
+        cart.setStatus(CartStatus.CLOSED);
+        cartRepository.save(cart);
+    }
 }
