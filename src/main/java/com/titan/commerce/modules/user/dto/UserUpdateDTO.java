@@ -1,13 +1,18 @@
 package com.titan.commerce.modules.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public class UserUpdateDTO {
+
+    @Schema(description = "Novo nome do usuário", example = "Maria da Silva Costa")
     private String name;
-    @Email private String email;
+
+    @Schema(description = "Novo e-mail do usuário", example = "maria.costa@email.com")
+    @Email
+    private String email;
 }
