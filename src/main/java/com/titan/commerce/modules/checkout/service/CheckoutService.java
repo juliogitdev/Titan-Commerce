@@ -36,7 +36,6 @@ public class CheckoutService {
 
     @Transactional
     public Order processCheckout(User user, CheckoutRequestDTO request){
-        //valida endereço
         //pendente
 
         //Busca o carrinho

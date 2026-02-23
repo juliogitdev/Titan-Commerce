@@ -28,7 +28,8 @@ public record CartItemResponseDTO(
         return new CartItemResponseDTO(
                 item.getId(),
                 item.getProductVariant().getId(),
-                "Produto #" + item.getProductVariant().getId(),
+                item.getProductVariant().getProduct().getTitle()
+                        + " - " + item.getProductVariant().getSkuCode(),
                 item.getQuantity(),
                 item.getPrice(),
                 item.getSubTotal()
