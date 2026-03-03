@@ -2,7 +2,7 @@
 
 -- 1. Tabela de Usuários
 CREATE TABLE users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     active BOOLEAN DEFAULT TRUE,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -12,7 +12,7 @@ CREATE TABLE users (
 
 -- 2. Tabela de Endereços
 CREATE TABLE addresses (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     zip_code VARCHAR(20),
     street VARCHAR(255),
@@ -22,7 +22,7 @@ CREATE TABLE addresses (
 
 -- 3. Tabela de Categorias
 CREATE TABLE categories (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     active BOOLEAN DEFAULT TRUE,
     name VARCHAR(255) NOT NULL,
@@ -31,9 +31,9 @@ CREATE TABLE categories (
     CONSTRAINT fk_category_parent FOREIGN KEY (parent_id) REFERENCES categories(id)
 );
 
--- 4. Tabela de Produtos (Genérico)
+-- 4. Tabela de Produtos
 CREATE TABLE products (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     active BOOLEAN DEFAULT TRUE,
     title VARCHAR(255) NOT NULL,
@@ -43,14 +43,14 @@ CREATE TABLE products (
     CONSTRAINT fk_product_category FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
--- 5. Tabela de Variações (SKU) - Com JSON para atributos
+-- 5. Tabela de Variações (SKU)
 CREATE TABLE product_variants (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     product_id BIGINT NOT NULL,
     sku_code VARCHAR(100) NOT NULL UNIQUE,
     stock_quantity INT DEFAULT 0,
     price DECIMAL(19, 2) NOT NULL,
-    attributes JSON, -- JSON (Cor, Tamanho, Numero, etc)
+    attributes JSONB,
     active BOOLEAN DEFAULT TRUE,
     CONSTRAINT fk_variant_product FOREIGN KEY (product_id) REFERENCES products(id)
 );
