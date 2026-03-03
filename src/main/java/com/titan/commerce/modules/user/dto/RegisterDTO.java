@@ -1,5 +1,6 @@
 package com.titan.commerce.modules.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,7 +12,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterDTO {
-    @NotBlank private String name;
-    @NotBlank @Email private String email;
-    @NotBlank @Size(min = 8) private String password;
+
+    @Schema(description = "Nome completo do usuário", example = "Maria Silva")
+    @NotBlank
+    private String name;
+
+    @Schema(description = "E-mail válido que será usado para login", example = "maria.silva@email.com")
+    @NotBlank
+    @Email
+    private String email;
+
+    @Schema(description = "Senha de acesso (mínimo 8 caracteres)", example = "SenhaForte@2024")
+    @NotBlank
+    @Size(min = 8)
+    private String password;
 }

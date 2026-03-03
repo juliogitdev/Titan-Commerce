@@ -119,7 +119,7 @@ public class UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
-        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), user.getPassword())){
             throw new IllegalArgumentException("Senha atual incorreta");
         }
 

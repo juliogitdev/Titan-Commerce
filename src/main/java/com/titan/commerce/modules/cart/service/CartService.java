@@ -63,8 +63,9 @@ public class CartService {
         Cart cart = getActiveCart(user, cartIdFromCookie);
 
         // 1. Busca o Produto Real
-        ProductVariant variant = productVariantRepository.findById(dto.productVariantId())
+        ProductVariant variant = productVariantRepository.findByIdAndActiveTrue(dto.productVariantId())
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
 
         // 2. Valida Estoque
         if (variant.getStockQuantity() < dto.quantity()) {
