@@ -23,6 +23,12 @@ public interface OrderRepository extends JpaRepository<Order, String> {
     //Busca por status da compra (Ex: pendente pagamento, cancelada, enviada e etc)
     List<Order> findOrdersByStatusAndCreatedAtBefore(StatusOrder statusOrder, LocalDateTime dateTime);
 
+    // Busca todos os pedidos de um usuário específico, ordenando do mais novo para o mais antigo
+    List<Order> findAllByUserIdOrderByCreatedAtDesc(Long userId);
+
+    // Busca um pedido específico garantindo que ele pertence àquele usuário
+    Optional<Order> findByIdAndUserId(String orderId, Long userId);
+
     //Busca uma compra pelo id trazendo pagamento e itens
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.payments WHERE o.id = :id")
     Optional<Order> findByIdWithItems(@Param("id") String id);

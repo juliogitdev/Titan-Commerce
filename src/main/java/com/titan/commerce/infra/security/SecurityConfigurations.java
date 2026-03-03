@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity // Permite o uso do @PreAuthorize nos Controllers (Usuários e Endereços)
 @RequiredArgsConstructor
 public class SecurityConfigurations {
 
@@ -29,14 +29,32 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/cart/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/cart/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/cart/**").permitAll()
 
+                        // 1. SWAGGER E DOCS
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+
+                        // 2. AUTENTICAÇÃO E CADASTRO (Acesso Total)
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+
+                        // 3. CARRINHO DE COMPRAS (Acesso Total - Suporta usuários logados ou anônimos via Cookie)
+                        .requestMatchers("/api/cart/**").permitAll()
+
+                        // 4. CATÁLOGO - LEITURA (Acesso Total para vitrine do E-commerce)
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/product-variants/**").permitAll()
+
+                        // 5. CATÁLOGO - ESCRITA (Acesso Restrito a Administradores)
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**", "/api/products/**", "/api/product-variants/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**", "/api/products/**", "/api/product-variants/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/categories/**", "/api/products/**", "/api/product-variants/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**", "/api/products/**", "/api/product-variants/**").hasRole("ADMIN")
+
+                        // 6. USUÁRIOS, ENDEREÇOS E CHECKOUT
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
