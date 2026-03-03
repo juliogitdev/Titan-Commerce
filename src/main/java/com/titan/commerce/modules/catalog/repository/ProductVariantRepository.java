@@ -29,6 +29,9 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     //lista todas as variantes desativadas (excluida)
     List<ProductVariant> findByActiveFalse();
 
+    //Busca produto ativo pelo id
+    Optional<ProductVariant> findByIdAndActiveTrue(Long id);
+
     // Esse
     // até a transação do checkout terminar (commit ou rollback).
     @Lock(LockModeType.PESSIMISTIC_WRITE)

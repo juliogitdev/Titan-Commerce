@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j // Para logs (System.out profissional)
+@Slf4j
 public class OrderCleanupService {
 
     private final OrderRepository orderRepository;
@@ -33,7 +33,7 @@ public class OrderCleanupService {
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void cancelUnpaidOrders() {
-        log.info("🤖 Robô de limpeza iniciado...");
+        log.info("limpeza iniciado...");
 
         // 1. Define o tempo limite (ex: pedidos feitos antes de 30 min atrás)
         LocalDateTime expirationTime = LocalDateTime.now().minusMinutes(1);
@@ -47,11 +47,11 @@ public class OrderCleanupService {
 
 
         if (expiredOrders.isEmpty()) {
-            log.info("✅ Nenhum pedido expirado encontrado.");
+            log.info("Nenhum pedido expirado encontrado.");
             return;
         }
 
-        log.info("⚠️ Encontrados {} pedidos expirados. Iniciando cancelamento...", expiredOrders.size());
+        log.info("Encontrados {} pedidos expirados. Iniciando cancelamento...", expiredOrders.size());
 
         for (Order order : expiredOrders) {
             Optional<Payment> payment = paymentRepository.findByOrderIdAndStatus(order.getId(), PaymentStatus.PENDING);
@@ -77,7 +77,7 @@ public class OrderCleanupService {
 
             paymentRepository.save(pay);
 
-            log.info("❌ Pedido {} cancelado automaticamente.", order.getId());
+            log.info("Pedido {} cancelado automaticamente.", order.getId());
         }
     }
 }

@@ -7,12 +7,14 @@ import com.titan.commerce.modules.cart.domain.enums.CartStatus;
 import com.titan.commerce.modules.cart.repository.CartRepository;
 import com.titan.commerce.modules.cart.service.CartService;
 import com.titan.commerce.modules.catalog.domain.ProductVariant;
+import com.titan.commerce.modules.catalog.dto.category.CategoryResponseDTO;
 import com.titan.commerce.modules.catalog.repository.ProductVariantRepository;
 import com.titan.commerce.modules.checkout.domain.Order;
 import com.titan.commerce.modules.checkout.domain.OrderItem;
 import com.titan.commerce.modules.checkout.domain.Payment;
 import com.titan.commerce.modules.checkout.dto.CheckoutItemDTO;
 import com.titan.commerce.modules.checkout.dto.CheckoutRequestDTO;
+import com.titan.commerce.modules.checkout.dto.OrderDetailsResponseDTO;
 import com.titan.commerce.modules.checkout.enums.PaymentStatus;
 import com.titan.commerce.modules.checkout.enums.StatusOrder;
 import com.titan.commerce.modules.checkout.repository.OrderRepository;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +66,10 @@ public class CheckoutService {
         for(CartItem cartItem : cart.getItems()){
             ProductVariant productVariant = productVariantRepository.findByIdWithLock(cartItem.getProductVariant().getId())
                     .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+            if(productVariant.getActive() == false){
+                throw new IllegalArgumentException("Produto " + productVariant.getSkuCode() + " foi removido");
+            }
 
             //Verifica se tem estoque
             if(productVariant.getStockQuantity() < cartItem.getQuantity()){
@@ -107,5 +115,7 @@ public class CheckoutService {
         //salva a compra e retorna
         return orderRepository.save(order);
     }
+
+
 
 }
