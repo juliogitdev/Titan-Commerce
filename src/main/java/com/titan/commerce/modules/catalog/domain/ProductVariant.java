@@ -26,6 +26,6 @@ public class ProductVariant extends BaseEntity {
     private Integer stockQuantity;
     private BigDecimal price;
 
-    @Column(columnDefinition = "json")
+    @Column(columnDefinition = "jsonb")
     private String attributes;
 }
